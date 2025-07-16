@@ -52,10 +52,17 @@
             <img src="{{ url_for('static', filename='stock_prediction.png') }}" class="img-fluid" alt="Prediction vs Original">
         </div>
         {% endif %}
+
+        {% if plot_path_future_prediction %}
+        <div class="chart-container">
+            <h3>Future Stock Price Prediction (Next 30 Days)</h3>
+            <img src="{{ url_for('static', filename='future_predictions.png') }}" class="img-fluid" alt="Future Prediction Chart">
+        </div>
+        {% endif %}
         
         {% if data_desc %}
         <div class="table-responsive">
-            <h3 class="mt-4">Descriptive Data from Jan 2000 to Nov 2024</h3>
+            <h3 class="mt-4">Descriptive Data from Jan 2000 to {{ current_month_year }}</h3>
             {{ data_desc | safe }}
         </div>
         {% endif %}
