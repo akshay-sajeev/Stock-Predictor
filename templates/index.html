@@ -1,113 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Trend Prediction</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .container {
-            max-width: 1100px;
-            margin-top: 60px;
-        }
-        .form-card {
-            padding: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-        }
-        .chart-card {
-            margin-top: 30px;
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-        }
-        .chart-img {
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-        }
-        .download-link {
-            margin-top: 25px;
-        }
-        .table-responsive {
-            margin-top: 40px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Trend Prediction</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #f5f6fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .container {
+      max-width: 1100px;
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+
+    .form-card, .chart-card, .table-responsive {
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .form-control {
+      height: 50px;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      height: 48px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .card-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 16px;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    .chart-img {
+      width: 100%;
+      height: auto;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+
+    .download-link {
+      margin-top: 40px;
+    }
+
+    .btn-outline-success {
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    h4.fw-bold {
+      margin-bottom: 20px;
+    }
+
+    a.navbar-brand {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+    }
+
+    a.navbar-brand span {
+      margin-left: 10px;
+    }
+
+    @media (max-width: 576px) {
+      .card-header {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand mx-auto fw-bold fs-4" href="#">📈 Stock Trend Prediction</a>
-        </div>
-    </nav>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand mx-auto fw-bold" href="#">
+        <span>Stock Trend Prediction</span>
+      </a>
+    </div>
+  </nav>
 
-    <!-- Content -->
-    <div class="container">
-        <!-- Form -->
-        <div class="form-card mb-4">
-            <form method="POST">
-                <div class="mb-3">
-                    <label for="stock" class="form-label fw-semibold">Enter Stock Ticker:</label>
-                    <input type="text" class="form-control" id="stock" name="stock" value="AAPL" placeholder="e.g., AAPL, TSLA, GOOG">
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Generate Report</button>
-            </form>
+  <!-- Main Container -->
+  <div class="container">
+    
+    <!-- Stock Form -->
+    <div class="form-card">
+      <form method="POST">
+        <div class="mb-3">
+          <label for="stock" class="form-label fw-semibold">Enter Stock Ticker:</label>
+          <input type="text" class="form-control" id="stock" name="stock" value="AAPL" placeholder="e.g., AAPL, TSLA, GOOG">
         </div>
-
-        <!-- Charts -->
-        {% if plot_path_ema_20_50 %}
-        <div class="card chart-card">
-            <div class="card-header bg-primary text-white fw-semibold">Closing Price vs Time (20 & 50 Days EMA)</div>
-            <img src="{{ url_for('static', filename='ema_20_50.png') }}" class="card-img-bottom chart-img" alt="EMA 20 & 50">
-        </div>
-        {% endif %}
-
-        {% if plot_path_ema_100_200 %}
-        <div class="card chart-card">
-            <div class="card-header bg-primary text-white fw-semibold">Closing Price vs Time (100 & 200 Days EMA)</div>
-            <img src="{{ url_for('static', filename='ema_100_200.png') }}" class="card-img-bottom chart-img" alt="EMA 100 & 200">
-        </div>
-        {% endif %}
-
-        {% if plot_path_prediction %}
-        <div class="card chart-card">
-            <div class="card-header bg-success text-white fw-semibold">Prediction vs Original Trend</div>
-            <img src="{{ url_for('static', filename='stock_prediction.png') }}" class="card-img-bottom chart-img" alt="Prediction vs Original">
-        </div>
-        {% endif %}
-
-        {% if plot_path_future_prediction %}
-        <div class="card chart-card">
-            <div class="card-header bg-info text-white fw-semibold">Future Stock Price Prediction (Next 30 Days)</div>
-            <img src="{{ url_for('static', filename='future_predictions.png') }}" class="card-img-bottom chart-img" alt="Future Prediction Chart">
-        </div>
-        {% endif %}
-
-        <!-- Data Table -->
-        {% if data_desc %}
-        <div class="table-responsive">
-            <h4 class="fw-bold">📊 Descriptive Data from Jan 2000 to {{ current_month_year }}</h4>
-            {{ data_desc | safe }}
-        </div>
-        {% endif %}
-
-        <!-- Download -->
-        {% if dataset_link %}
-        <div class="download-link text-center">
-            <a href="{{ url_for('download_file', filename=dataset_link.split('/')[-1]) }}" class="btn btn-outline-success btn-lg">⬇️ Download Dataset (CSV)</a>
-        </div>
-        {% endif %}
+        <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+      </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart Cards -->
+    {% if plot_path_ema_20_50 %}
+    <div class="chart-card">
+      <div class="card-header bg-primary text-white">Closing Price vs Time (20 & 50 Days EMA)</div>
+      <img src="{{ url_for('static', filename='ema_20_50.png') }}" class="chart-img" alt="EMA 20 & 50">
+    </div>
+    {% endif %}
+
+    {% if plot_path_ema_100_200 %}
+    <div class="chart-card">
+      <div class="card-header bg-primary text-white">Closing Price vs Time (100 & 200 Days EMA)</div>
+      <img src="{{ url_for('static', filename='ema_100_200.png') }}" class="chart-img" alt="EMA 100 & 200">
+    </div>
+    {% endif %}
+
+    {% if plot_path_prediction %}
+    <div class="chart-card">
+      <div class="card-header bg-success text-white">Prediction vs Original Trend</div>
+      <img src="{{ url_for('static', filename='stock_prediction.png') }}" class="chart-img" alt="Prediction vs Original">
+    </div>
+    {% endif %}
+
+    {% if plot_path_future_prediction %}
+    <div class="chart-card">
+      <div class="card-header bg-info text-white">Future Stock Price Prediction (Next 30 Days)</div>
+      <img src="{{ url_for('static', filename='future_predictions.png') }}" class="chart-img" alt="Future Prediction Chart">
+    </div>
+    {% endif %}
+
+    <!-- Descriptive Data Table -->
+    {% if data_desc %}
+    <div class="table-responsive">
+      <h4 class="fw-bold">Descriptive Data from Jan 2000 to {{ current_month_year }}</h4>
+      {{ data_desc | safe }}
+    </div>
+    {% endif %}
+
+    <!-- Download Button -->
+    {% if dataset_link %}
+    <div class="download-link text-center">
+      <a href="{{ url_for('download_file', filename=dataset_link.split('/')[-1]) }}" class="btn btn-outline-success btn-lg">
+        Download Dataset (CSV)
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
